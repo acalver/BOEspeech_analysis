@@ -5,6 +5,7 @@ import string
 import re
 import gensim
 from gensim import utils
+from datetime import datetime
 
 def import_pdf(file):
     
@@ -13,11 +14,18 @@ def import_pdf(file):
         for page in doc:
             text += page.get_text()
             
+            
     #remove references at end of document and page numbers
     cleaned_text=''
     for line in text.split('\n'):
         if not re.search('^[0-9]+\\.', line) and not re.search('^Page [0-9]+', line):
             cleaned_text += line + '\n'
+            
+    #find date of publishing
+    pub_date=re.search('[0-9]{1,2} [a-zA-Z]+ [0-9]{4}',cleaned_text)
+    pub_date=pub_date.group()
+    pub_date = datetime.strptime(pub_date, '%d %B %Y').date()
+    pub_date = datetime.strftime(pub_date,'%Y-%m-%d')
             
     #repeated in some pdfs
     cleaned_text = re.sub(r"All speeches are available online at www.bankofengland.co.uk.*", "", cleaned_text)
@@ -46,7 +54,7 @@ def import_pdf(file):
  
     cleaned_text = remove_stopwords(cleaned_text)
     
-    return cleaned_text
+    return cleaned_text, pub_date
 
 #taken from source code
 #https://github.com/RaRe-Technologies/gensim/blob/d5556ea2700333e07c8605385def94dd96fb2c94/gensim/parsing/preprocessing.py#L71
