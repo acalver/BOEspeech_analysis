@@ -3,6 +3,8 @@
 import fitz  # from pymupdf package
 import string
 import re
+import gensim
+from gensim import utils
 
 def import_pdf(file):
     
@@ -32,9 +34,9 @@ def import_pdf(file):
     cleaned_text = cleaned_text.translate(str.maketrans('', '', string.digits))
     
     #remove stopwords
-    from gensim.parsing.preprocessing import remove_stopwords
+    #rom gensim.parsing.preprocessing import remove_stopwords
     cleaned_text = cleaned_text.lower()
-    cleaned_text = remove_stopwords(cleaned_text)
+    
     
     
     from nltk.stem import WordNetLemmatizer
@@ -42,8 +44,18 @@ def import_pdf(file):
     tokenised = nltk.word_tokenize(cleaned_text)
     cleaned_text = ' '.join([lemmatizer.lemmatize(words) for words in tokenised])
  
+    cleaned_text = remove_stopwords(cleaned_text)
+    
     return cleaned_text
 
+#taken from source code
+#https://github.com/RaRe-Technologies/gensim/blob/d5556ea2700333e07c8605385def94dd96fb2c94/gensim/parsing/preprocessing.py#L71
+#function to add words to default stopword list
+def remove_stopwords(s):
+    new_stops = {'bank', 'england', 'ha', 'wa'}
+    stops = gensim.parsing.preprocessing.STOPWORDS.union(new_stops)
+    s = utils.to_unicode(s)
+    return " ".join(w for w in s.split() if w not in stops)
 
 #%%
 '''
