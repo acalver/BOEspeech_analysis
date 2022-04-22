@@ -35,7 +35,7 @@ def import_pdf(file):
     cleaned_text = re.sub(r"All speeches are available online at www.bankofengland.co.uk.*", "", cleaned_text)
     
     
-    punc = string.punctuation + '’“”‘' #curly quotes not included in default
+    punc = string.punctuation + '’“”‘–' #curly quotes and long dash not included in default
     
     #remove punctuation, digits and standardise case
     cleaned_text = cleaned_text.translate(str.maketrans('', '', punc))
@@ -59,7 +59,7 @@ def import_pdf(file):
 #function to add words to default stopword list
 def remove_stopwords_manual(s):
     new_stops = {'central', 'bank', 'et', 'al', 'et al',
-                 'uk', 'chart'}
+                 'uk', 'chart', 's'}
     stops = gensim.parsing.preprocessing.STOPWORDS.union(new_stops)
     s = utils.to_unicode(s)
     return " ".join(w for w in s.split() if w not in stops)

@@ -118,8 +118,10 @@ def top_coocurrance_words(doc, target):
         top_words['Target'] = target
         
         return top_words
-    
-for target in ['risk', 'crisis', 'uncertainty']:
+
+risk_terms = ['risk', 'crisis', 'uncertainty']
+
+for target in risk_terms:
     for doc in corpus:
         
         top_values = top_coocurrance_words(doc, target)
@@ -128,5 +130,10 @@ for target in ['risk', 'crisis', 'uncertainty']:
 highest_coo = highest_coo.groupby(['Target', 'Co-Oc']).sum().sort_values('Freq', ascending=False)
 highest_coo = highest_coo.reset_index('Co-Oc')
 
-#highest_coo.loc['risk']
-#x=highest_coo.loc['crisis']
+x=highest_coo.groupby('Target').head(20)
+
+for rt in risk_terms:
+    title = 'Top 20 terms within 5 words of: ' + rt
+    sns.barplot(data=x.loc[rt], x='Co-Oc', y='Freq').set_title(title)    
+    plt.xticks(rotation=40)
+    plt.show()
