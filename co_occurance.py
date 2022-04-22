@@ -1,3 +1,5 @@
+import pandas as pd
+
 def build_vocabulary(text):
     '''
     Builds vocabulary with all the words
@@ -12,13 +14,6 @@ def build_vocabulary(text):
         vocab_dict[word] = index
     return vocab_dict
 
-vocab_dict = build_vocabulary(corpus[0])
-
-co_ocurrence_vectors = pd.DataFrame(
-    np.zeros([len(vocab_dict), len(vocab_dict)]),
-    index = vocab_dict.keys(),
-    columns = vocab_dict.keys()
-)
 
 def build_context(
     text:str, 
@@ -47,6 +42,3 @@ def build_context(
             
     return co_ocurrence_vectors
 
-co_ocurrence_vectors_2 = build_context(corpus[0], 5, co_ocurrence_vectors)
-
-co_ocurrence_vectors.loc['inflation'].sort_values(ascending=False).head(10)

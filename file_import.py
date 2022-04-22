@@ -45,21 +45,22 @@ def import_pdf(file):
     #rom gensim.parsing.preprocessing import remove_stopwords
     cleaned_text = cleaned_text.lower()
     
-    
+    from gensim.parsing.preprocessing import remove_stopwords
+    cleaned_text = remove_stopwords(cleaned_text)
     
     from nltk.stem import WordNetLemmatizer
     lemmatizer = WordNetLemmatizer()
     tokenised = nltk.word_tokenize(cleaned_text)
     cleaned_text = ' '.join([lemmatizer.lemmatize(words) for words in tokenised])
  
-    cleaned_text = remove_stopwords(cleaned_text)
+    cleaned_text = remove_stopwords_manual(cleaned_text)
     
     return cleaned_text, pub_date
 
 #taken from source code
 #https://github.com/RaRe-Technologies/gensim/blob/d5556ea2700333e07c8605385def94dd96fb2c94/gensim/parsing/preprocessing.py#L71
 #function to add words to default stopword list
-def remove_stopwords(s):
+def remove_stopwords_manual(s):
     new_stops = {'bank', 'england', 'ha', 'wa', 'et', 'al', 'et al',
                  'central', 'uk', 'chart'}
     stops = gensim.parsing.preprocessing.STOPWORDS.union(new_stops)
