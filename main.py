@@ -43,11 +43,12 @@ def corpus_totals(corp, tfidf_results, top_n):
     return totals
 
 top_words = corpus_totals(corpus, results, 25)
+top_words = pd.DataFrame(top_words.items(), columns=['word','freq'])
 
 import seaborn as sns
 from matplotlib import pyplot as plt
 sns.set(rc={'figure.figsize':(10.7,5.27)})
-sns.barplot(x=list(top_words.keys()), y=list(top_words.values()))
+sns.barplot(x='word', y='freq', data=top_words)
 plt.xticks(rotation=40)
 plt.tight_layout()
 
