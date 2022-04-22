@@ -96,14 +96,37 @@ plt.show()
 
 #%% Co Occurance
 
-vocab_dict = build_vocabulary(corpus[1])
+highest_coo = pd.DataFrame()
 
-co_ocurrence_vectors = pd.DataFrame(
-    np.zeros([len(vocab_dict), len(vocab_dict)]),
-    index = vocab_dict.keys(),
-    columns = vocab_dict.keys()
-)
+def top_coocurrance_words(doc, target):
+    
+    vocab_dict = build_vocabulary(doc)
+    
+    if target in vocab_dict.keys():
+    
+        co_ocurrence_vectors = pd.DataFrame(
+            np.zeros([len(vocab_dict), len(vocab_dict)]),
+            index = vocab_dict.keys(),
+            columns = vocab_dict.keys()
+        )
+        
+        co_ocurrence_vectors = build_context(doc, 5, co_ocurrence_vectors)
+        top_words = co_ocurrence_vectors.loc[target].sort_values(ascending=False).head(10)
+        top_words = top_words.rename('Freq')
+        top_words = pd.DataFrame(top_words)
+        top_words = top_words.rename_axis('Co-Oc').reset_index()
+        top_words['Target'] = target
+        
+        return top_words
+    
+for target in ['risk', 'crisis', 'uncertainty']:
+    for doc in corpus:
+        
+        top_values = top_coocurrance_words(doc, target)
+        highest_coo = highest_coo.append(top_values)
 
+highest_coo = highest_coo.groupby(['Target', 'Co-Oc']).sum().sort_values('Freq', ascending=False)
+highest_coo = highest_coo.reset_index('Co-Oc')
 
-co_ocurrence_vectors = build_context(corpus[1], 5, co_ocurrence_vectors)
-co_ocurrence_vectors.loc['crisis'].sort_values(ascending=False).head(10)
+#highest_coo.loc['risk']
+#x=highest_coo.loc['crisis']
