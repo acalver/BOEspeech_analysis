@@ -67,24 +67,30 @@ risks = ['inflation',
          'distribution']
 #brexit and covid?!
 
-time_series = pd.DataFrame(columns=['Date', 'Freq', 'Risk'])
+#Time series plot
+def risks_time_series(corp, risk):
+    time_series = pd.DataFrame(columns=['Date', 'Freq', 'Risk'])
+    
+    for r in risk:
+        r_count = []
+        
+        for doc in corp:
+            r_count.append(doc.count(r))
+        
+        r_ts = pd.DataFrame([publishing_dates, r_count]).transpose()
+        r_ts.columns = ['Date', 'Freq']
+        r_ts['Risk'] = r
+        
+        time_series = time_series.append(r_ts)
+        
+    return time_series
 
-for r in risks:
-    r_count = []
-    
-    for doc in corpus:
-        r_count.append(doc.count(r))
-    
-    risk_ts = pd.DataFrame([publishing_dates, r_count]).transpose()
-    risk_ts.columns = ['Date', 'Freq']
-    risk_ts['Risk'] = r
-    
-    time_series = time_series.append(risk_ts)
+risk_ts = risks_time_series(corpus, risks)
 
 #wide data for  plotting
-time_series = time_series.pivot("Date", "Risk", "Freq")
+risk_ts = risk_ts.pivot("Date", "Risk", "Freq")
 sns.set(rc={'figure.figsize':(10.7,5.27)})
-sns.lineplot(data=time_series, dashes=False)
+sns.lineplot(data=risk_ts, dashes=False)
 plt.xticks('')
 plt.show()
 
