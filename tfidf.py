@@ -1,8 +1,13 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
-vectorizer = TfidfVectorizer(max_df=1.0,min_df=0.33, ngram_range=(1,2))
-vectors = vectorizer.fit_transform(corpus)
 
-feature_names = vectorizer.get_feature_names_out()
+def TFIDF(corp):
+    
+    vectorizer = TfidfVectorizer(max_df=1.0,min_df=0.33, ngram_range=(1,2))
+    vectorizer.fit_transform(corp)#vectors = 
+    
+    feature_names = vectorizer.get_feature_names_out()
+    
+    return vectorizer, feature_names
 
 def sort_coo(coo_matrix):
     """Sort a dict with highest score"""
@@ -31,6 +36,8 @@ def extract_topn_from_vector(feature_names, sorted_items, topn=10):
         results[feature_vals[idx]]=score_vals[idx]
     
     return results
+
+
 def get_keywords(vectorizer, feature_names, doc, TOP_K_KEYWORDS):
     """Return top k keywords from a doc using TF-IDF method"""
 
@@ -45,18 +52,21 @@ def get_keywords(vectorizer, feature_names, doc, TOP_K_KEYWORDS):
     
     return list(keywords.keys())
 
-result = []
-for doc in corpus:
+
+def corpus_resuts(corp, vectorizer, f_names, top_n):
     
-    result.append(get_keywords(vectorizer, feature_names, doc, 20))
+    result = []
+    for doc in corp:
+        
+        result.append(get_keywords(vectorizer, f_names, doc, top_n))
 
-
+    return result
 
 
 
 
 #%%
-from sklearn.feature_extraction.text import CountVectorizer
+'''from sklearn.feature_extraction.text import CountVectorizer
 from numpy import array, log
 cv = CountVectorizer()
 tf = cv.fit_transform(corpus)
@@ -86,3 +96,4 @@ for doc_tfidf in doc_sorted_tfidfs:
     tfidf_kw.append(ll)
     
 tfidf_kw[2][:10]
+'''

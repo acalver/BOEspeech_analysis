@@ -60,7 +60,8 @@ def import_pdf(file):
 #https://github.com/RaRe-Technologies/gensim/blob/d5556ea2700333e07c8605385def94dd96fb2c94/gensim/parsing/preprocessing.py#L71
 #function to add words to default stopword list
 def remove_stopwords(s):
-    new_stops = {'bank', 'england', 'ha', 'wa'}
+    new_stops = {'bank', 'england', 'ha', 'wa', 'et', 'al', 'et al',
+                 'central', 'uk', 'chart'}
     stops = gensim.parsing.preprocessing.STOPWORDS.union(new_stops)
     s = utils.to_unicode(s)
     return " ".join(w for w in s.split() if w not in stops)
