@@ -51,6 +51,7 @@ sns.set(rc={'figure.figsize':(10.7,5.27)})
 sns.barplot(x='word', y='freq', data=top_words)
 plt.xticks(rotation=40)
 plt.tight_layout()
+plt.show()
 
 risks = ['inflation',
          'productivity',
@@ -65,6 +66,27 @@ risks = ['inflation',
          'trust',
          'distribution']
 #brexit and covid?!
+
+time_series = pd.DataFrame(columns=['Date', 'Freq', 'Risk'])
+
+for r in risks:
+    r_count = []
+    
+    for doc in corpus:
+        r_count.append(doc.count(r))
+    
+    risk_ts = pd.DataFrame([publishing_dates, r_count]).transpose()
+    risk_ts.columns = ['Date', 'Freq']
+    risk_ts['Risk'] = r
+    
+    time_series = time_series.append(risk_ts)
+
+#wide data for  plotting
+time_series = time_series.pivot("Date", "Risk", "Freq")
+sns.set(rc={'figure.figsize':(10.7,5.27)})
+sns.lineplot(data=time_series, dashes=False)
+plt.xticks('')
+plt.show()
 
 #%% Co Occurance
 
