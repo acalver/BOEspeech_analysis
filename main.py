@@ -12,10 +12,6 @@ for file in list(glob.glob('speeches/*.pdf')):
     publishing_dates.append(d)
 
 
-#based on initial analysis, add stop works 
-#bank, england, 
-#ha, wa - lemma issue
-
 #%% TF-IDF
 
 TFIDFvectorizer, feature_names = TFIDF(corpus)
