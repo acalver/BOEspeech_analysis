@@ -3,7 +3,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 def TFIDF(corp):
     
     vectorizer = TfidfVectorizer(max_df=1.0,min_df=0.33, ngram_range=(1,2))
-    vectorizer.fit_transform(corp)#vectors = 
+    vectorizer.fit_transform(corp)
     
     feature_names = vectorizer.get_feature_names_out()
     
@@ -61,39 +61,3 @@ def corpus_resuts(corp, vectorizer, f_names, top_n):
         result.append(get_keywords(vectorizer, f_names, doc, top_n))
 
     return result
-
-
-
-
-#%%
-'''from sklearn.feature_extraction.text import CountVectorizer
-from numpy import array, log
-cv = CountVectorizer()
-tf = cv.fit_transform(corpus)
-tf = tf.toarray()
-tf = log(tf + 1)
-
-dict_of_tokens={i[1]:i[0] for i in vectorizer.vocabulary_.items()}
-
-tfidf_vectors = []  # all deoc vectors by tfidf
-for row in vectors:
-  tfidf_vectors.append({dict_of_tokens[column]:value for (column,value) in zip(row.indices,row.data)})
-
-
-
-doc_sorted_tfidfs =[]  # list of doc features each with tfidf weight
-#sort each dict of a document
-for dn in tfidf_vectors:
-  newD = sorted(dn.items(), key=lambda x: x[1], reverse=True)
-  newD = dict(newD)
-  doc_sorted_tfidfs.append(newD)
-
-
-
-tfidf_kw = [] # get the keyphrases as a list of names without tfidf values
-for doc_tfidf in doc_sorted_tfidfs:
-    ll = list(doc_tfidf.keys())
-    tfidf_kw.append(ll)
-    
-tfidf_kw[2][:10]
-'''

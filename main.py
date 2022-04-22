@@ -51,6 +51,20 @@ sns.barplot(x=list(top_words.keys()), y=list(top_words.values()))
 plt.xticks(rotation=40)
 plt.tight_layout()
 
+risks = ['inflation',
+         'productivity',
+         'risk',
+         'growth',
+         'pay',
+         'capital',
+         'wage', 
+         'crisis',
+         'gap',
+         'income',
+         'trust',
+         'distribution']
+#brexit and covid?!
+
 #%% Co Occurance
 
 vocab_dict = build_vocabulary(corpus[1])
