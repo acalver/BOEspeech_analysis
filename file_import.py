@@ -1,5 +1,3 @@
-#handle nltk downloads?
-
 import fitz  # from pymupdf package
 import string
 import re
