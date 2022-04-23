@@ -12,6 +12,9 @@ from gensim.parsing.preprocessing import remove_stopwords
 
 
 def import_pdf(file):
+    '''
+    import speech PDFs and clean the text
+    '''
     
     with fitz.open(file) as doc:
         text = ""
@@ -56,8 +59,11 @@ def import_pdf(file):
 
 #taken from source code
 #https://github.com/RaRe-Technologies/gensim/blob/d5556ea2700333e07c8605385def94dd96fb2c94/gensim/parsing/preprocessing.py#L71
-#function to add words to default stopword list
 def remove_stopwords_manual(s):
+    '''
+    add words to default stopword list
+    '''
+    
     new_stops = {'central', 'bank', 'et', 'al', 'et al',
                  'uk', 'chart', 's'}
     stops = gensim.parsing.preprocessing.STOPWORDS.union(new_stops)

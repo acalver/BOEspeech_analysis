@@ -1,6 +1,9 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 def TFIDF(corp):
+    '''
+    run TF-IDF algorithm
+    '''
     
     vectorizer = TfidfVectorizer(max_df=1.0,min_df=0.33, ngram_range=(1,2))
     vectorizer.fit_transform(corp)
@@ -9,13 +12,21 @@ def TFIDF(corp):
     
     return vectorizer, feature_names
 
+
 def sort_coo(coo_matrix):
-    """Sort a dict with highest score"""
+    """
+    Return a sorted dictonary
+    """
+    
     tuples = zip(coo_matrix.col, coo_matrix.data)
+    
     return sorted(tuples, key=lambda x: (x[1], x[0]), reverse=True)
 
+
 def extract_topn_from_vector(feature_names, sorted_items, topn=10):
-    """get the feature names and tf-idf score of top n items"""
+    """
+    get the feature names and tf-idf score of top n items
+    """
     
     #use only topn items from vector
     sorted_items = sorted_items[:topn]
@@ -39,7 +50,9 @@ def extract_topn_from_vector(feature_names, sorted_items, topn=10):
 
 
 def get_keywords(vectorizer, feature_names, doc, TOP_K_KEYWORDS):
-    """Return top k keywords from a doc using TF-IDF method"""
+    """
+    Return top k keywords from a doc using TF-IDF method
+    """
 
     #generate tf-idf for the given document
     tf_idf_vector = vectorizer.transform([doc])
@@ -54,8 +67,12 @@ def get_keywords(vectorizer, feature_names, doc, TOP_K_KEYWORDS):
 
 
 def corpus_resuts(corp, vectorizer, f_names, top_n):
+    '''
+    get the results of the TF-IDF algorithm for each speech
+    '''
     
     result = []
+    
     for doc in corp:
         
         result.append(get_keywords(vectorizer, f_names, doc, top_n))

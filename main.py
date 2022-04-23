@@ -3,6 +3,7 @@ import glob
 from tfidf import *
 from co_occurance import *
 import numpy as np
+import pandas as  pd
 
 corpus=[]
 publishing_dates = []
@@ -18,6 +19,10 @@ TFIDFvectorizer, feature_names = TFIDF(corpus)
 results = corpus_resuts(corpus, TFIDFvectorizer, feature_names, 10)
 
 def corpus_totals(corp, tfidf_results, top_n):
+    '''
+    Count the frequency of each TF-IDF result in the corresponding speech
+    add these and select the top 25 words
+    '''
     totals = dict()
     for i in range(len(corp)):
         
@@ -61,10 +66,15 @@ risks = ['inflation',
          'income',
          'trust',
          'distribution']
-#brexit and covid?!
+
 
 #Time series plot
-def risks_time_series(corp, risk):
+def risks_time_series(corp, risk, dates):
+    '''
+    Count the frequency of each risk term in each document
+    join to the date of the speech to create a time series
+    for each risk term
+    '''
     time_series = pd.DataFrame(columns=['Date', 'Freq', 'Risk'])
     
     for r in risk:
@@ -73,7 +83,7 @@ def risks_time_series(corp, risk):
         for doc in corp:
             r_count.append(doc.count(r))
         
-        r_ts = pd.DataFrame([publishing_dates, r_count]).transpose()
+        r_ts = pd.DataFrame([dates, r_count]).transpose()
         r_ts.columns = ['Date', 'Freq']
         r_ts['Risk'] = r
         
@@ -95,11 +105,16 @@ plt.show()
 highest_coo = pd.DataFrame()
 
 def top_coocurrance_words(doc, target):
+    '''
+    Generate a co-occurrance matrix of each speech
+    select the top 10 co-occurance terms with the target risk word
+    '''
     
     vocab_dict = build_vocabulary(doc)
     
     if target in vocab_dict.keys():
     
+        #blank matrix of 0s
         co_ocurrence_vectors = pd.DataFrame(
             np.zeros([len(vocab_dict), len(vocab_dict)]),
             index = vocab_dict.keys(),
@@ -107,6 +122,8 @@ def top_coocurrance_words(doc, target):
         )
         
         co_ocurrence_vectors = build_context(doc, 5, co_ocurrence_vectors)
+        
+        #generate dataframe of top 10 co-occurance words
         top_words = co_ocurrence_vectors.loc[target].sort_values(ascending=False).head(10)
         top_words = top_words.rename('Freq')
         top_words = pd.DataFrame(top_words)
@@ -123,13 +140,15 @@ for target in risk_terms:
         top_values = top_coocurrance_words(doc, target)
         highest_coo = highest_coo.append(top_values)
 
+#sum repeated terms
 highest_coo = highest_coo.groupby(['Target', 'Co-Oc']).sum().sort_values('Freq', ascending=False)
 highest_coo = highest_coo.reset_index('Co-Oc')
 
-x=highest_coo.groupby('Target').head(20)
+#select top 20 co-occurrancd words for each target risk term
+coo_top20 = highest_coo.groupby('Target').head(20)
 
 for rt in risk_terms:
     title = 'Top 20 terms within 5 words of: ' + rt
-    sns.barplot(data=x.loc[rt], x='Co-Oc', y='Freq').set_title(title)    
+    sns.barplot(data=coo_top20.loc[rt], x='Co-Oc', y='Freq').set_title(title)    
     plt.xticks(rotation=40)
     plt.show()
